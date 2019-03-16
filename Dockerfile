@@ -22,3 +22,4 @@ WORKDIR /dreamscape
 COPY index.js package.json package-lock.json /dreamscape/
 RUN npm install
 
+EXPOSE 8080
