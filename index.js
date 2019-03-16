@@ -10,7 +10,7 @@ app.get('/', function(req, res) {
   const { text = 'Welcome to Flavortown', len = 200 } = req.query;
   const cleanText = escapeShell(text);
   const cmd = `python3 gpt-2-Pytorch/main.py --text "${cleanText}" --length=${len}`;
-  exec('ls -lrt', { silent: true }, (code, stdout, stderr) => {
+  exec(cmd, { silent: true }, (code, stdout, stderr) => {
     res.send(`Welcome to Dreamscape ${code} ${stdout} ${stderr}`);
   });
 });
@@ -18,4 +18,12 @@ app.get('/', function(req, res) {
 const server = app.listen(process.env.PORT, function() {
   const port = server.address().port;
   console.log(`Dreamscape running on port ${port}`);
+});
+
+process.on('SIGTERM', () => {
+  console.info('SIGTERM signal received.');
+  console.log('Closing http server.');
+  server.close(() => {
+    console.log('Http server closed.');
+  });
 });
