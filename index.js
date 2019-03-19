@@ -1,17 +1,29 @@
 const express = require('express');
 const app = express();
 const { exec } = require('shelljs');
+const GPT_FOLDER = './gpt';
+const GPT_COMMAND = 'python3 generate_text.py';
 
-var escapeShell = function(cmd) {
-  return cmd.replace(/(["'])/g, '\\$1');
+const escapeShell = function(param) {
+  return param.replace(/(["'])/g, '\\$1');
+};
+
+const getCmd = (text, length) => {
+  const cleanText = escapeShell(text);
+  return `cd ${GPT_FOLDER} && ${GPT_COMMAND} --text "${cleanText}" --length=${length}`;
 };
 
 app.get('/', function(req, res) {
-  const { text = 'Welcome to Flavortown', len = 200 } = req.query;
-  const cleanText = escapeShell(text);
-  const cmd = `cd gpt-2-Pytorch && python3 main.py --text "${cleanText}" --length=${len}`;
-  exec(cmd, { silent: true }, (code, stdout, stderr) => {
-    res.send(`Welcome to Dreamscape ${code} ${stdout} ${stderr}`);
+  const { text, length = 200 } = req.query;
+  if (!text) {
+    res.json({});
+    return;
+  }
+  exec(getCmd(text, length), { silent: true }, (code, stdout) => {
+    res.json({
+      input: cleanText,
+      output: stdout
+    });
   });
 });
 
