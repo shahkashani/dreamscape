@@ -20,7 +20,8 @@ app.get('/', function(req, res) {
     return;
   }
   console.log(`Generating text (${text}, ${length})...`);
-  exec(getCmd(text, length), { silent: true }, (code, stdout) => {
+  exec(getCmd(text, length), { silent: true }, (code, stdout, stderr) => {
+    console.log(code, stdout, stderr);
     res.json({
       input: text,
       output: stdout
