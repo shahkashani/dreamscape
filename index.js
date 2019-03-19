@@ -28,7 +28,7 @@ app.get('/', function(req, res) {
   });
 });
 
-const server = app.listen(process.env.PORT, function() {
+const server = app.listen(process.env.PORT || 8080, function() {
   const port = server.address().port;
   console.log(`Dreamscape running on port ${port}`);
 });
