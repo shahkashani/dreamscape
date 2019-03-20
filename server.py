@@ -68,10 +68,12 @@ class server(BaseHTTPRequestHandler):
         query = dict(parse_qsl(query_str))
         if 'q' in query:
             q = query['q']
+            output = get_text(q, 100)
             data = {
               'input': q,
-              'output': get_text(q, 100)
+              'output': output
             }
+            print('Generated %s' % output)
         else:
             data = {}
         json_string = json.dumps(data)
