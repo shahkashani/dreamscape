@@ -76,7 +76,8 @@ class server(BaseHTTPRequestHandler):
             data = {
                 'q': q,
                 'length': length,
-                'output': q + output
+                'output': output,
+                'full': q + output
             }
             print('Generated %s' % output)
         else:
