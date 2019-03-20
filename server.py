@@ -66,12 +66,17 @@ class server(BaseHTTPRequestHandler):
         self.end_headers()
         query_str = urlparse(self.path).query
         query = dict(parse_qsl(query_str))
+        if 'len' in query:
+            length = int(query['len'])
+        else:
+            length = 100
         if 'q' in query:
             q = query['q']
             output = get_text(q, 100)
             data = {
-              'input': q,
-              'output': output
+                'length': length,
+                'input': q,
+                'output': output
             }
             print('Generated %s' % output)
         else:
