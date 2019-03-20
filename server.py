@@ -50,6 +50,7 @@ def get_text(
 
         context_tokens = enc.encode(text)
         generated = 0
+        result = []
         for _ in range(nsamples // batch_size):
             out = sess.run(output, feed_dict={
                 context: [context_tokens for _ in range(batch_size)]
@@ -57,7 +58,8 @@ def get_text(
             for i in range(batch_size):
                 generated += 1
                 text = enc.decode(out[i])
-                return text
+                result.append(text)
+        return result
 
 class server(BaseHTTPRequestHandler): 
     def do_GET(self):
@@ -69,12 +71,12 @@ class server(BaseHTTPRequestHandler):
         data = {}
         if 'length' in query:
             length = int(query['length'])
-            data['length'] = length;
+            data['length'] = length
         else:
             length = None
         if 'q' in query:
             q = query['q']
-            output = get_text(q, length)
+            output = get_text(q, length)[0]
             data['q'] = q
             data['output'] = q + output
             print('Generated %s' % output)
