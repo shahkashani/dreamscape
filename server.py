@@ -69,7 +69,7 @@ class server(BaseHTTPRequestHandler):
         if 'length' in query:
             length = int(query['length'])
         else:
-            length = 100
+            length = None
         if 'q' in query:
             q = query['q']
             output = get_text(q, 100)
