@@ -1,4 +1,5 @@
 .DS_Store
-gpt/models
-gpt/__pycache__
+models
+__pycache__
 node_modules
+.vscode
