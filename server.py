@@ -66,22 +66,18 @@ class server(BaseHTTPRequestHandler):
         self.end_headers()
         query_str = urlparse(self.path).query
         query = dict(parse_qsl(query_str))
+        data = {}
         if 'length' in query:
             length = int(query['length'])
+            data['length'] = length;
         else:
             length = None
         if 'q' in query:
             q = query['q']
-            output = get_text(q, 100)
-            data = {
-                'q': q,
-                'length': length,
-                'output': output,
-                'full': q + output
-            }
+            output = get_text(q, length)
+            data['q'] = q
+            data['output'] = q + output
             print('Generated %s' % output)
-        else:
-            data = {}
         json_string = json.dumps(data)
         self.wfile.write(bytes(json_string, 'utf-8'))
         return
