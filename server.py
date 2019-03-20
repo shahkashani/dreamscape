@@ -61,6 +61,14 @@ def get_text(
                 result.append(text)
         return result
 
+def get_clean_output(output):
+    if (len(output) > 0):
+        result = output[0]
+        result = result.split('<|endoftext|>')[0]
+        return result
+    else:
+        return None
+
 class server(BaseHTTPRequestHandler): 
     def do_GET(self):
         self.send_response(200)
@@ -76,10 +84,11 @@ class server(BaseHTTPRequestHandler):
             length = None
         if 'q' in query:
             q = query['q']
-            output = get_text(q, length)[0]
+            output = get_text(q, length)
+            print('Generated %s' % output)
+            output = get_clean_output(output)
             data['q'] = q
             data['output'] = q + output
-            print('Generated %s' % output)
         json_string = json.dumps(data)
         self.wfile.write(bytes(json_string, 'utf-8'))
         return
