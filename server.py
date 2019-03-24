@@ -97,6 +97,8 @@ class server(BaseHTTPRequestHandler):
             output = get_clean_output(output)
             data['q'] = q
             data['output'] = q + output
+        else:
+            data = {}
         json_string = json.dumps(data)
         self.wfile.write(bytes(json_string, 'utf-8'))
         return
