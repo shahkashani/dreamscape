@@ -11,12 +11,12 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 def get_text(
     text,
     length=None,
+    temperature=1,
+    top_k=40,
     model_name='117M',
     seed=None,
     nsamples=1,
-    batch_size=1,
-    temperature=1,
-    top_k=40,
+    batch_size=1
 ):
     print('Generating text for input "%s"...' % text)
     if batch_size is None:
@@ -77,14 +77,20 @@ class server(BaseHTTPRequestHandler):
         query_str = urlparse(self.path).query
         query = dict(parse_qsl(query_str))
         data = {}
+        length = None
+        top_k = 40
+        temperature = 1
         if 'length' in query:
             length = int(query['length'])
             data['length'] = length
-        else:
-            length = None
+        if 'top_k' in query:
+            top_k = int(query['top_k'])
+        if 'temperature' in query:
+            temperature = float(query['temperature'])
         if 'q' in query:
             q = query['q']
-            output = get_text(q, length)
+            print('Query: "%s" length: %s top_k: %d temperature: %f' % (q, length, top_k, temperature))
+            output = get_text(q, length, temperature, top_k)
             print('Generated %s' % output)
             output = get_clean_output(output)
             data['q'] = q
