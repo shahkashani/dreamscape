@@ -85,8 +85,10 @@ class server(BaseHTTPRequestHandler):
             data['length'] = length
         if 'top_k' in query:
             top_k = int(query['top_k'])
+            data['top_k'] = top_k
         if 'temperature' in query:
             temperature = float(query['temperature'])
+            data['temperature'] = temperature
         if 'q' in query:
             q = query['q']
             print('Query: "%s" length: %s top_k: %d temperature: %f' % (q, length, top_k, temperature))
